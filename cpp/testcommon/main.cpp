@@ -26,12 +26,17 @@ int main()
     sw.run([&](){ for (int i = 0; i < 10000; ++i) result = atoi(numbers[i]); });
     sw.printResults();
 
-    sw.run([&](){ for (int i = 0; i < 10000; ++i) result = (numbers[i][0] - '0') * 10000 +
-                                                           (numbers[i][1] - '0') * 1000 +
-                                                           (numbers[i][2] - '0') * 100 +
-                                                           (numbers[i][3] - '0') * 10 +
-                                                           (numbers[i][4] - '0'); });
-    sw.printResults();
+    StopWatch sw1;
+    sw1.run([&](){ for (int i = 0; i < 10000; ++i)
+    { result += (numbers[i][0] - '0') * 10000;
+    result += (numbers[i][1] - '0') * 1000;
+    result += (numbers[i][2] - '0') * 100;
+    result += (numbers[i][3] - '0') * 10;
+    result += (numbers[i][4] - '0');
+    };
+    }
+                                                    );
+    sw1.printResults();
     for (int i = 0; i < 10000; i++) delete[] numbers[i];
     return 0;
 }

@@ -34,9 +34,10 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="main.c">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Compiler>
+			<Add option="-std=c++0x" />
+		</Compiler>
+		<Unit filename="stopWatch.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />
