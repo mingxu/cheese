@@ -5,7 +5,9 @@ enum Types {
     raw,
     player,
     card,
-    sanguoCard
+    sanguoCard,
+    play,
+    deal
 };
 
 template <Types t, class DataT, class ListenerT>

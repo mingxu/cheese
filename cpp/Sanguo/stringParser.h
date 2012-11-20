@@ -3,7 +3,6 @@
 
 #include "parser.h"
 #include <string>
-#include <iostream>
 
 template <class ListenerT>
 class Parser<raw, std::string, ListenerT>  {
@@ -14,6 +13,9 @@ public:
         {
             case 'p': Parser<player, std::string, ListenerT>::parse(data.substr(1), listener); break;
             case 'c': Parser<card, std::string, ListenerT>::parse(data.substr(1), listener); break;
+            case 'a': Parser<play, std::string, ListenerT>::parse(data.substr(1), listener); break;
+            case 'd': Parser<deal, std::string, ListenerT>::parse(data.substr(1), listener); break;
+
             default: listener.process(data); break;
         }
     }
@@ -21,6 +23,7 @@ public:
 
 class Player {
 public:
+    int id;
     std::string name;
 };
 
@@ -29,6 +32,7 @@ enum CardValue { cA = 'a', c2 = '2', c3 = '3', c4 = '4', c5 = '5', c6 = '6', c7 
 
 class Card {
 public:
+    int id;
     Suite suite;
     CardValue cValue;
 };
@@ -38,7 +42,8 @@ class Parser<player, std::string, ListenerT> {
 public:
     static void parse(std::string const& data, ListenerT& listener) {
         Player p;
-        p.name = data;
+        p.id = data[0] - '0';
+        p.name = data.substr(1);
         listener.process(p);
     }
 };
@@ -48,21 +53,47 @@ class Parser<card, std::string, ListenerT> {
 public:
     static void parse(std::string const& data, ListenerT& listener) {
         Card c;
-        c.suite = Suite(data[0] - '0');
-        c.cValue = CardValue(data[1]);
+        c.id = data[0] - '0';
+        c.suite = Suite(data[1] - '0');
+        c.cValue = CardValue(data[2]);
         listener.process(c);
     }
 };
 
-
-class Listener {
+class Action {
 public:
-
-template <class T>
-void process(T const& data) { std::cout << "generic data:" << data << std::endl; }
-
-void process(Player const& p) { std::cout << "player data: name:" << p.name << std::endl; }
-
-void process(Card const& c) { std::cout << "card data: suite: " << c.suite << " value:" << c.cValue << std::endl; }
+    int sourceId;
+    int destId;
+    int cardId;
 };
+
+template <class ListenerT>
+class Parser<play, std::string, ListenerT> {
+public:
+    static void parse(std::string const& data, ListenerT& listener) {
+        Action a;
+        a.sourceId = data[0] - '0';
+        a.destId = data[1] - '0';
+        a.cardId = data[2] - '0';
+        listener.process(a);
+    }
+};
+
+class Deal {
+public:
+    int playerId;
+    int cardId;
+};
+
+template <class ListenerT>
+class Parser<deal, std::string, ListenerT> {
+public:
+    static void parse(std::string const& data, ListenerT& listener) {
+        Deal a;
+        a.playerId = data[0] - '0';
+        a.cardId = data[1] - '0';
+        listener.process(a);
+    }
+};
+
 #endif // STRINGPARSER_H_INCLUDED
