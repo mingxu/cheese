@@ -10,23 +10,26 @@ enum Logon {
 
 typedef Protocol<Logon> LogonP;
 
-typedef LogonP::Message<LogonP::Field<const char*, Username>, LogonP::Field<int, Timestamp>> messageType;
+typedef LogonP::MessageAccessor<LogonP::Field<const char*, Username>, LogonP::Field<const char*, Password>,LogonP::Field<int, Timestamp>> messageType;
 
 int main()
 {
-    const char* data = "hello world";
-    int a = 1;
     messageType m;
-    m.set<Username>(data);
-    m.set<Timestamp>(a);
+    m.set<Username>("hello world");
+    m.set<Password>("byte cruel world");
+    m.set<Timestamp>(1);
 
 
     //message m;
     //m(data, identity<Logon, Username>());
     //t.getValue<Password>() = "secret";
     //t.setValue<Timestamp>(1234);
-    cout << "value is: " << m.get<Username>() << endl;
-    cout << "value is: " << m.get<Timestamp>() << endl;
+    cout << "value is: ";
+    cout << m.get<Username>() << endl;
+    cout << "value is: ";
+    cout << m.get<Password>() << endl;
+    cout << "value is: ";
+    cout << m.get<Timestamp>() << endl;
     //cout << "value is: " << t.getValue<Timestamp>() << endl;
     return 0;
 }
